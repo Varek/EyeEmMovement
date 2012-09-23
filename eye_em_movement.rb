@@ -58,7 +58,9 @@ get '/load_movement/:lat/:lng/:start_date' do
     tries = 10
     earliest_photo_date = DateTime.now
     while tries > 0 && earliest_photo_date > (start_date-5.minutes) do
+      logger.info "request user photos #{user_id}, #{tries}"
       ps = EyeEmConnector.user_photos(user_id,{:limit => 50, :offset => offset, :detailed => true})['photos']['items']
+      logger.info ps
       prev_photo_location = [ps.first['latitude'].to_f,ps.first['longitude'].to_f]
       ps.each do |photo|
         photo_datetime = DateTime.parse(photo['updated'])

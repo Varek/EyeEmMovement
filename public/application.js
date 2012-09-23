@@ -83,12 +83,16 @@ $(function() {
         // slider 0 till unix timestamp difference of 3 days in 10 minutes steps
         var startdate, lat, lng;
         switch($('#place').val()){
-          case '1': {
+          case '1': 
             startdate = '2012-08-24T20:00:00+02:00';
             lat = 52.52515030;
             lng = 13.36928844;
             break;
-          }
+          case '2':
+            startdate = '2012-08-10T18:00:00+02:00';
+            lat = 52.53084564;
+            lng = 13.40096760;
+            break;
         }
         $( "#slider" ).slider( "option", "step", 600 );
         //place for search query posting down here
@@ -135,11 +139,11 @@ function drawHeatMap (map,movement,timestamp) {
   var heatMapDataSet = locationsToHeatMapData(movement[timestamp]);
   colorGradient = {
     stops: {
-      "0": "#0066FF",
-      "0.25": "#2657D9",
-      "0.5": "#73388C",
-      "0.75": "#A62459",
-      "1": "#FF0000"},
+      "0": "#E8680C",
+      "0.25": "#F5A400",
+      "0.5": "#EDED09",
+      "0.75": "#FF4600",
+      "1": "#F51F00"},
     interpolate: false};
 
   heatmapProvider = new nokia.maps.heatmap.Overlay({
@@ -155,6 +159,7 @@ function drawHeatMap (map,movement,timestamp) {
   // Add it to the map's object collection so it will be rendered onto the map
   map.overlays.add(heatmapProvider);
   $('#photoContainer').append('<a href="#foo" class="time_travel" data-timestamp="' + (timestamp-600) +'"><div class="arrow_up"></div></a>')
+  $('#photoContainer').append('<a href="#baz" class="time_travel" data-timestamp="' + (timestamp+600) +'"><div class="arrow_down"></div></a>')
   for (var i = 0; i < movement[timestamp].length; i++) {
     if (!movement[timestamp][i]['latitude'] || !movement[timestamp][i]['longitude']) continue
     var coord = new nokia.maps.geo.Coordinate(parseFloat(movement[timestamp][i]['latitude']),parseFloat(movement[timestamp][i]['longitude']))
@@ -162,7 +167,6 @@ function drawHeatMap (map,movement,timestamp) {
     var thumbUrl = movement[timestamp][i]['thumbUrl'].replace('/h/','/w/')
     $('#photoContainer').append('<div class="photo_div"><img src="'+thumbUrl+'"></div>')
   }
-  $('#photoContainer').append('<a href="#baz" class="time_travel" data-timestamp="' + (timestamp+600) +'"><div class="arrow_down"></div></a>')
 }
 
 var locationsToHeatMapData = function (locations) {

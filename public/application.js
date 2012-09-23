@@ -76,19 +76,29 @@ $(function() {
         //timestamp ausgeben
         //$('<p>Start '+datum+'</p>').insertAfter('#zeit');
         //Zeitspanne Beginn
-        var enddatum = 1345831200 + (5*60*60);
         //$('<p>Ende '+enddatum+'</p>').insertAfter('#zeit');
         //console.log(enddatum-datum);
         // set slider values after init of slider
         //$( "#slider" ).slider( "option", "min", datum, "max", enddatum );
         // slider 0 till unix timestamp difference of 3 days in 10 minutes steps
-        $( "#slider" ).slider( "option", "min", 1345831200);
-        $( "#slider" ).slider( "option", "max", enddatum);
+        var startdate, lat, lng;
+        switch($('#place').val()){
+          case '1': {
+            startdate = '2012-08-24T20:00:00+02:00';
+            lat = 52.52515030;
+            lng = 13.36928844;
+            break;
+          }
+        }
         $( "#slider" ).slider( "option", "step", 600 );
         //place for search query posting down here
-        $('#slider').slider("value", 1345831200)
-        $.getJSON('/load_movement', function(data) {
-          movement = data;
+        $.getJSON('/load_movement/'+lat+'/'+lng+'/'+startdate, function(data) {
+          movement = data[1];
+          var startdate = data[0];
+          var enddatum = startdate + (5*60*60);
+          $( "#slider" ).slider( "option", "min", startdate);
+          $( "#slider" ).slider( "option", "max", enddatum);
+          $('#slider').slider("value", startdate)
           drawHeatMap(map,movement,$('#slider').slider("value"));
         });
         
@@ -112,12 +122,16 @@ $(function() {
   });  
   
    //$( ".selector" ).slider({ min: -7 });
+   $('.time_travel').live('click',function(){
+      $('#slider').slider("value", $(this).data('timestamp'))
+   })
 })
 
 function drawHeatMap (map,movement,timestamp) {
   var heatmapProvider;
   map.overlays.clear();
   markersContainer.objects.clear();
+  $('#photoContainer').empty();
   var heatMapDataSet = locationsToHeatMapData(movement[timestamp]);
   colorGradient = {
     stops: {
@@ -140,11 +154,15 @@ function drawHeatMap (map,movement,timestamp) {
   heatmapProvider.addData(heatMapDataSet);
   // Add it to the map's object collection so it will be rendered onto the map
   map.overlays.add(heatmapProvider);
+  $('#photoContainer').append('<a href="#foo" class="time_travel" data-timestamp="' + (timestamp-600) +'"><div class="arrow_up"></div></a>')
   for (var i = 0; i < movement[timestamp].length; i++) {
+    if (!movement[timestamp][i]['latitude'] || !movement[timestamp][i]['longitude']) continue
     var coord = new nokia.maps.geo.Coordinate(parseFloat(movement[timestamp][i]['latitude']),parseFloat(movement[timestamp][i]['longitude']))
     markersContainer.objects.add(new nokia.maps.map.StandardMarker(coord))
-    $('#photoContainer').append('<img src="'+movement[timestamp][i]['thumbUrl']+'">')
+    var thumbUrl = movement[timestamp][i]['thumbUrl'].replace('/h/','/w/')
+    $('#photoContainer').append('<div class="photo_div"><img src="'+thumbUrl+'"></div>')
   }
+  $('#photoContainer').append('<a href="#baz" class="time_travel" data-timestamp="' + (timestamp+600) +'"><div class="arrow_down"></div></a>')
 }
 
 var locationsToHeatMapData = function (locations) {

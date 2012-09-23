@@ -9,27 +9,68 @@ html {
         overflow:hidden;
         width: 100%;
         height: 100%;
-        font-size: 62.5%; 
     }
     
     #mapContainer {
         width: 100%;
-        height: 80%;
+        height: 100%;
         left: 0;
         top: 0;
         position: absolute;
     }
     #photoContainer {
-        width: 100%;
-        height: 20%;
-        left: 0;
-        bottom: 0;
+        width: 120px;
+        height: 100%;
+        right: 0;
+        top: 0;
         position: absolute;
+        overflow: auto;
+        margin: 5px 0 5px;
     }
+    .photo_div {
+        margin: 5px 10px 0 5px;
+        position: relative;
+    }
+
+.title_box {
+    background-color: #ddd;
+    opacity: 0.7;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 300px;
+    font-family: Arial;
+}
+.subtitle {
+    font-size: 0.8em;
+    margin: 0 0 0 5px;
+}
+
+#dialog-form{
+    font-size: 62.5%
+}
+
+.arrow_up {
+    background-image: url(arrow_up.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 30px;
+    margin: 5px 10px 5px 5px;
+}
+
+.arrow_down {
+    background-image: url(arrow_down.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 30px;
+    margin: 5px 10px 5px 5px;
+}
 label, input { display:block; }
 input.text { margin-bottom:12px; width:95%; padding: .4em; }
 fieldset { padding:0; border:0; margin-top:25px; }
-h1 { font-size: 1.2em; margin: .6em 0; }
+h1 { font-size: 1.2em; margin: 5px 0 3px 5px; }
 .ui-dialog .ui-state-error { padding: .3em; }
 .validateTips { border: 1px solid transparent; padding: 0.3em; }
-div#slider { width: 200px; margin: 20px;}
+div#slider { width: auto; margin: 15px;}
